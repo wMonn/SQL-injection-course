@@ -1,0 +1,133 @@
+/* Общие стили */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Заголовок */
+h1 {
+    text-align: center;
+    color: white;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Ссылка "На главную" */
+a[href="/"] {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 25px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+a[href="/"]:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateX(-5px);
+}
+
+/* Сетка уровней */
+.levels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Карточка уровня */
+.level-card {
+    background: white;
+    border-radius: 15px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+
+/* Заголовок карточки */
+.level-card h3 {
+    color: #667eea;
+    font-size: 1.8em;
+    margin: 0 0 15px 0;
+}
+
+/* Текст карточки */
+.level-card p {
+    color: #666;
+    font-size: 1.1em;
+    line-height: 1.6;
+    margin-bottom: 25px;
+}
+
+/* Кнопка */
+.btn {
+    display: inline-block;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    color: white;
+    text-decoration: none;
+    padding: 12px 30px;
+    border-radius: 25px;
+    font-weight: bold;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Адаптивность для мобильных */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em;
+    }
+    
+    .levels-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    
+    .level-card {
+        padding: 20px;
+    }
+    
+    .level-card h3 {
+        font-size: 1.5em;
+    }
+}
+
+/* Анимация загрузки */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.level-card {
+    animation: fadeIn 0.5s ease-out forwards;
+}
+
+/* Задержки для анимации карточек */
+.level-card:nth-child(1) { animation-delay: 0.1s; }
+.level-card:nth-child(2) { animation-delay: 0.3s; }
+.level-card:nth-child(3) { animation-delay: 0.5s; }
