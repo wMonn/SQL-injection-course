@@ -1,15 +1,424 @@
 <!DOCTYPE html>
-<html>
+<html lang="ru">
 <head>
-    <title>Уровень 1 - SQL Injection Lab</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SQL Injection Lab - Уровень 1</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            max-width: 1200px;
+            width: 100%;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            min-height: 500px;
+        }
+
+        .left-panel {
+            background: linear-gradient(135deg, #1e2a3a 0%, #0f1a24 100%);
+            color: white;
+            padding: 40px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .left-panel h1 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .left-panel .badge {
+            background: #e74c3c;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-top: 20px;
+            width: fit-content;
+        }
+
+        .right-panel {
+            flex: 1;
+            padding: 40px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-box {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-box h2 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            margin-bottom: 30px;
+            font-size: 0.9rem;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #2c3e50;
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .links {
+            margin-top: 30px;
+            text-align: center;
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+
+        .links a {
+            color: #667eea;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .links a:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+
+        .result-box {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 10px;
+            background: white;
+            border-left: 4px solid;
+            font-size: 0.9rem;
+        }
+
+        .result-box.success {
+            border-left-color: #27ae60;
+            background: #e8f5e9;
+            color: #155724;
+        }
+
+        .result-box.error {
+            border-left-color: #e74c3c;
+            background: #fef3f2;
+            color: #c0392b;
+        }
+
+        .result-box.info {
+            border-left-color: #3498db;
+            background: #e3f2fd;
+            color: #1565c0;
+        }
+
+        .hint {
+            margin-top: 15px;
+            padding: 10px;
+            background: #fff3cd;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .query-display {
+            font-family: 'Courier New', monospace;
+            background: #2d2d2d;
+            color: #4ecdc4;
+            padding: 10px;
+            border-radius: 8px;
+            margin-top: 10px;
+            font-size: 0.8rem;
+            overflow-x: auto;
+        }
+    </style>
 </head>
 <body>
-    <h1>🔰 Уровень 1: Основы</h1>
-    <a href="/levels">← К уровням</a>
-    
-    <div class="lab-content">
-        <p>Здесь будет практическое задание по SQL-инъекциям...</p>
+    <div class="container">
+        <div class="left-panel">
+            <h1> SQL Injection Lab</h1>
+            <p>Уровень 1: Базовая аутентификация</p>
+            <p style="margin-top: 20px; opacity: 0.9;">В этом уровне вы можете обойти аутентификацию с помощью классической SQL-инъекции.</p>
+            <div class="badge">🎯 Цель: Войти без пароля</div>
+        </div>
+        <div class="right-panel">
+            <div class="form-box">
+                <h2> Вход в тренажёр</h2>
+                <p class="subtitle">Уязвимая версия для демонстрации SQLi (Уровень 1)</p>
+                
+                <form method="POST" id="loginForm">
+                    <div class="form-group">
+                        <label> Имя пользователя</label>
+                        <input type="text" name="username" id="username" class="form-control" 
+                               placeholder="Логин" autocomplete="off">
+                    </div>
+                    
+                    <div class="form-group">
+			    <label> Пароль</label>
+                        <input type="password" name="password" id="password" class="form-control" 
+                               placeholder="Пароль">
+                    </div>
+                    
+                    <button type="submit" class="btn">🚪 Войти</button>
+                </form>
+
+                <div id="result"></div>
+
+                <div class="hint">
+                     <strong>Подсказка для уровня 1:</strong><br>
+                    Попробуйте ввести в поле "Имя пользователя": <code style="background:#fff; padding:2px 5px; border-radius:4px;">' OR '1'='1</code><br>
+                    А поле пароля оставьте любым или тоже с инъекцией.
+                </div>
+
+                <div class="links">
+                    <a href="#" onclick="showTheory()"> Теория</a>
+		    <a href="#" onclick="resetLevel()"> Сброс</a>
+                    <a href="#" onclick="nextLevel()"> Уровень 2</a>
+                </div>
+            </div>
+        </div>
     </div>
+
+    <script>
+        // Имитация базы данных пользователей
+        const usersDB = [
+            { id: 1, username: 'admin', password: 'secret123', role: 'admin' },
+            { id: 2, username: 'user', password: 'userpass', role: 'user' },
+            { id: 3, username: 'alice', password: 'alice2024', role: 'user' }
+        ];
+
+        // Функция, имитирующая уязвимый SQL запрос
+        function vulnerableSQLQuery(username, password) {
+            // УЯЗВИМЫЙ КОД - НИКОГДА НЕ ИСПОЛЬЗУЙТЕ В РЕАЛЬНЫХ ПРОЕКТАХ!
+            // Прямая конкатенация в SQL запрос
+            const query = `SELECT * FROM users WHERE username = '${username}' AND password = '${password}'`;
+            
+            // Логируем запрос для демонстрации (в реальном тренажёре это было бы на сервере)
+            console.log('Выполняется SQL запрос:', query);
+            
+            // Имитируем выполнение запроса
+            // В реальной уязвимой системе инъекция изменила бы логику запроса
+            let isAuthenticated = false;
+            let matchedUser = null;
+            
+            // Простая имитация - проверяем, содержит ли запрос признаки инъекции
+            // или совпадает ли с реальными данными
+            const hasInjection = username.toLowerCase().includes("' or") || 
+                                username.toLowerCase().includes("or '1'='1") ||
+                                username.toLowerCase().includes("or 1=1") ||
+                                password.toLowerCase().includes("' or") ||
+                                password.toLowerCase().includes("or '1'='1");
+            
+            if (hasInjection) {
+                // Если есть инъекция - даём доступ (имитация обхода аутентификации)
+                isAuthenticated = true;
+                matchedUser = { username: username.split("'")[0] || "hacker", role: "guest" };
+            } else {
+                // Нормальная проверка
+                matchedUser = usersDB.find(u => u.username === username && u.password === password);
+                isAuthenticated = !!matchedUser;
+            }
+            
+            return {
+                success: isAuthenticated,
+                user: matchedUser,
+                query: query,
+                isInjection: hasInjection
+            };
+        }
+
+        // Отображение результата
+        function displayResult(result) {
+            const resultDiv = document.getElementById('result');
+            
+            if (result.success) {
+                let userInfo = '';
+                if (result.user) {
+                    userInfo = `Добро пожаловать, ${result.user.username}!`;
+                    if (result.user.role === 'admin') userInfo += ' (Администратор)';
+                } else {
+                    userInfo = 'Доступ предоставлен через SQL инъекцию!';
+                }
+                
+                resultDiv.innerHTML = `
+                    <div class="result-box success">
+                        <strong> Аутентификация успешна!</strong><br>
+                        ${userInfo}
+                        ${result.isInjection ? '<br><br>🎉 Вы использовали SQL-инъекцию для обхода аутентификации! Это демонстрирует уязвимость.' : ''}
+                        <div class="query-display">
+                            📝 Выполненный SQL запрос:<br>
+                            <code style="color: #ff6b6b;">${escapeHtml(result.query)}</code>
+                        </div>
+                    </div>
+                `;
+            } else {
+                resultDiv.innerHTML = `
+                    <div class="result-box error">
+                        <strong> Ошибка аутентификации</strong><br>
+                        Неверное имя пользователя или пароль.
+                        <div class="query-display">
+                            Выполненный SQL запрос:<br>
+                            <code style="color: #ff6b6b;">${escapeHtml(result.query)}</code>
+                        </div>
+                        <br>
+                         Попробуйте SQL-инъекцию: <code style="background:#fff; padding:2px 5px;">' OR '1'='1</code> в поле логина
+                    </div>
+                `;
+            }
+        }
+
+        // Функция для экранирования HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/(')/g, "&#39;");
+        }
+
+        // Обработка отправки формы
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            if (!username) {
+                document.getElementById('result').innerHTML = `
+                    <div class="result-box error">
+                        Пожалуйста, введите имя пользователя
+                    </div>
+                `;
+                return;
+            }
+            
+            const result = vulnerableSQLQuery(username, password);
+            displayResult(result);
+            
+            // Очищаем поля (опционально)
+            // document.getElementById('username').value = '';
+            // document.getElementById('password').value = '';
+        });
+
+        // Функция для отображения теории
+        window.showTheory = function() {
+            document.getElementById('result').innerHTML = `
+                <div class="result-box info">
+                    <strong>📖 Теория SQL-инъекций (Уровень 1)</strong><br><br>
+                    <strong>Что произошло?</strong><br>
+                    Уязвимый код формирует SQL запрос так:<br>
+                    <code style="background:#2d2d2d; color:#4ecdc4; display:block; padding:8px; margin:10px 0; border-radius:5px;">
+                    SELECT * FROM users WHERE username = '${'пользователь'}' AND password = '${'пароль'}'
+                    </code><br>
+                    
+                    Когда вы вводите <code style="background:#ffeaa7; padding:2px 5px;">' OR '1'='1</code> в поле username, запрос становится:<br>
+                    <code style="background:#2d2d2d; color:#4ecdc4; display:block; padding:8px; margin:10px 0; border-radius:5px;">
+                    SELECT * FROM users WHERE username = '' OR '1'='1' AND password = 'любой_пароль'
+                    </code><br>
+                    
+                    Условие <code>'1'='1'</code> всегда истинно, поэтому запрос возвращает всех пользователей и обходит проверку пароля!<br><br>
+                    
+                    <strong> Как защититься?</strong><br>
+                    1. Использовать подготовленные выражения (Prepared Statements)<br>
+                    2. Экранировать спецсимволы<br>
+                    3. Использовать ORM<br>
+                    4. Валидация ввода<br>
+                    5. Минимальные привилегии для БД
+                </div>
+            `;
+        };
+
+        // Сброс уровня
+        window.resetLevel = function() {
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('result').innerHTML = `
+                <div class="result-box info">
+                     Уровень сброшен. Попробуйте снова использовать SQL-инъекцию!
+                </div>
+            `;
+        };
+
+        // Переход на следующий уровень (демо)
+        window.nextLevel = function() {
+            document.getElementById('result').innerHTML = `
+                <div class="result-box info">
+                     Уровень 2 в разработке...<br>
+                    В следующем уровне вы научитесь обходить аутентификацию с UNION инъекциями!
+                </div>
+            `;
+        };
+
+        // Добавляем пример успешной инъекции при загрузке
+        window.addEventListener('load', function() {
+            console.log('SQL Injection Lab - Уровень 1 загружен');
+            console.log('Пример инъекции: \' OR \'1\'=\'1');
+        });
+    </script>
 </body>
 </html>
