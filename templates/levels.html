@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Уровни - SQL Injection Lab</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_levels.css') }}"
+</head>
+<body>
+    <h1>🎮 Уровни сложности</h1>
+    <a href="/">← На главную</a>
+    
+    <div class="levels-grid">
+        <div class="level-card">
+            <h3>Уровень 1</h3>
+            <p>Основы SQL-инъекций</p>
+            <a href="/level/1" class="btn">Начать</a>
+        </div>
+        <div class="level-card">
+            <h3>Уровень 2</h3>
+            <p>Error-based инъекции</p>
+            <a href="/level/2" class="btn">Начать</a>
+        </div>
+        <div class="level-card">
+            <h3>Уровень 3</h3>
+            <p>Union-based инъекции</p>
+            <a href="/level/3" class="btn">Начать</a>
+        </div>
+    </div>
+</body>
+</html>

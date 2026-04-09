@@ -1,0 +1,202 @@
+/* Общие стили */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(135deg, #2c3e50, #3498db);
+    margin: 0;
+    padding: 20px;
+    min-height: 100vh;
+    color: #333;
+}
+
+/* Заголовок */
+h1 {
+    text-align: center;
+    color: white;
+    font-size: 2.5em;
+    margin-bottom: 30px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Ссылка "На главную" */
+a[href="/"] {
+    display: inline-block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 20px;
+    background: rgba(255,255,255,0.2);
+    border-radius: 25px;
+    margin-bottom: 30px;
+    transition: all 0.3s ease;
+}
+
+a[href="/"]:hover {
+    background: rgba(255,255,255,0.3);
+    transform: translateX(-5px);
+}
+
+/* Контейнер с теорией */
+.theory-content {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    border-radius: 20px;
+    padding: 40px;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+    animation: slideUp 0.5s ease-out;
+}
+
+/* Заголовки внутри теории */
+.theory-content h2 {
+    color: #2c3e50;
+    font-size: 1.8em;
+    margin: 30px 0 20px 0;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #3498db;
+}
+
+.theory-content h2:first-of-type {
+    margin-top: 0;
+}
+
+/* Текст */
+.theory-content p {
+    color: #555;
+    font-size: 1.2em;
+    line-height: 1.8;
+    margin: 20px 0;
+}
+
+/* Список */
+.theory-content ul {
+    list-style: none;
+    padding: 0;
+}
+
+.theory-content li {
+    background: #f8f9fa;
+    color: #2c3e50;
+    font-size: 1.1em;
+    padding: 15px 20px;
+    margin: 10px 0;
+    border-radius: 10px;
+    border-left: 5px solid #3498db;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.theory-content li:hover {
+    transform: translateX(10px);
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+/* Стили для блоков с кодом */
+.theory-content pre {
+    background: #2c3e50;
+    color: #ecf0f1;
+    padding: 20px;
+    border-radius: 10px;
+    overflow-x: auto;
+    font-family: 'Courier New', monospace;
+    font-size: 1.1em;
+    border-left: 5px solid #e74c3c;
+}
+
+.theory-content code {
+    background: #ecf0f1;
+    color: #e74c3c;
+    padding: 2px 5px;
+    border-radius: 3px;
+    font-family: 'Courier New', monospace;
+}
+
+/* Стили для примеров инъекций */
+.injection-example {
+    background: #f8f9fa;
+    border: 2px dashed #e74c3c;
+    border-radius: 10px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.injection-example h3 {
+    color: #e74c3c;
+    margin-top: 0;
+    font-size: 1.3em;
+}
+
+.injection-example code {
+    display: block;
+    background: #2c3e50;
+    color: #2ecc71;
+    padding: 15px;
+    border-radius: 8px;
+    margin: 10px 0;
+    font-size: 1.2em;
+}
+
+/* Анимации */
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Адаптивность */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 2em;
+    }
+    
+    .theory-content {
+        padding: 20px;
+    }
+    
+    .theory-content h2 {
+        font-size: 1.5em;
+    }
+    
+    .theory-content p {
+        font-size: 1.1em;
+    }
+    
+    .theory-content li {
+        font-size: 1em;
+        padding: 12px 15px;
+    }
+    
+    .injection-example code {
+        font-size: 1em;
+    }
+}
+
+/* Стили для цитат */
+.theory-content blockquote {
+    background: #f8f9fa;
+    border-left: 5px solid #3498db;
+    margin: 20px 0;
+    padding: 15px 20px;
+    font-style: italic;
+    color: #555;
+    border-radius: 0 10px 10px 0;
+}
+
+/* Стили для предупреждений */
+.theory-content .warning {
+    background: #fff3cd;
+    border: 1px solid #ffeeba;
+    color: #856404;
+    padding: 15px 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+    font-weight: bold;
+}
+
+.theory-content .warning::before {
+    content: "⚠️ ";
+    font-size: 1.2em;
+}

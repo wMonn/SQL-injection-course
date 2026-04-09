@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | SQL Injection Course</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background-attachment: fixed;
+            position: relative;
+        }
+
+        /* Анимация для уведомлений */
+        @keyframes slideDown {
+            from {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(-100px);
+                opacity: 0;
+            }
+        }
+
+        .flash-messages {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .flash-message {
+            padding: 15px 25px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 500;
+            animation: slideDown 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(10px);
+        }
+
+        .flash-message.success {
+            background: rgba(76, 175, 80, 0.95);
+            border-left: 4px solid #2e7d32;
+        }
+
+        .flash-message.error {
+            background: rgba(244, 67, 54, 0.95);
+            border-left: 4px solid #c62828;
+        }
+
+        .flash-message.info {
+            background: rgba(33, 150, 243, 0.95);
+            border-left: 4px solid #1565c0;
+        }
+
+        .flash-message.fade-out {
+            animation: slideUp 0.5s ease forwards;
+        }
+
+        .wrapper {
+            width: 420px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px 40px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .wrapper:hover {
+            transform: translateY(-5px);
+        }
+
+        .wrapper h1 {
+            font-size: 36px;
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .input-box {
+            margin-bottom: 30px;
+        }
+
+        .input-box input {
+            width: 100%;
+            height: 50px;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            outline: none;
+            border-radius: 40px;
+            padding: 0 20px;
+            color: white;
+            font-size: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            transition: all 0.3s;
+        }
+
+        .input-box input:focus {
+            background: rgba(255, 255, 255, 0.3);
+            border-color: rgba(255, 255, 255, 0.8);
+        }
+
+        .input-box input::placeholder {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn {
+            width: 100%;
+            height: 50px;
+            background: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #764ba2;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 20px;
+        }
+
+        .btn:hover {
+            background: #f0f0f0;
+            transform: scale(1.02);
+        }
+
+        .register-link {
+            text-align: center;
+            color: white;
+            font-size: 14px;
+        }
+
+        .register-link a {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .wrapper {
+                width: 90%;
+                padding: 20px 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Контейнер для flash сообщений -->
+    <div class="flash-messages">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </div>
+
+    <div class="wrapper">
+        <form action="{{ url_for('login') }}" method="POST">
+            <h1>🔐 Login</h1>
+            <div class="input-box">
+                <input type="text" name="username" placeholder="Username" required autocomplete="off">
+            </div>
+            <div class="input-box">
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn">Login</button>
+            <div class="register-link">
+                <p>Test account: <strong>admin / admin123</strong></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        // Автоматическое исчезновение сообщений через 3 секунды
+        setTimeout(function() {
+            const messages = document.querySelectorAll('.flash-message');
+            messages.forEach(function(message) {
+                message.classList.add('fade-out');
+                setTimeout(function() {
+                    message.remove();
+                }, 500);
+            });
+        }, 3000);
+    </script>
+</body>
+</html>
