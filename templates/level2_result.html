@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Результаты - Уровень 2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h2 {
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-name {
+            color: white;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        h2 {
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .query-info {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-family: monospace;
+            color: #ffd700;
+            overflow-x: auto;
+        }
+
+        .error-box {
+            background: rgba(244, 67, 54, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #f44336;
+        }
+
+        .error-box h3 {
+            color: #ffcccc;
+            margin-bottom: 10px;
+        }
+
+        .error-box pre {
+            color: #ff9999;
+            font-family: monospace;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .results-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .results-table th, .results-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+
+        .results-table th {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .success {
+            background: rgba(76, 175, 80, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            color: #ccffcc;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <h2>SQL Injection Lab</h2>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, {{ username }}</span>
+            <a href="/level/2" class="back-btn">← Назад к уровню 2</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <h2>Результаты запроса</h2>
+        
+        <div class="query-info">
+            <strong>Выполненный SQL запрос:</strong><br>
+            {{ query }}
+        </div>
+
+        {% if error %}
+            <div class="error-box">
+                <h3>⚠️ Ошибка SQL (Error-Based Injection Detected)</h3>
+                <pre>{{ error }}</pre>
+                <p style="margin-top: 10px; font-size: 14px;">
+                    💡 Эта ошибка может раскрыть информацию о структуре базы данных!
+                </p>
+            </div>
+        {% elif results %}
+            <div class="success">
+                Найдено {{ results|length }} результат(ов) для ID: "{{ search }}"
+            </div>
+            
+            <table class="results-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for row in results %}
+                    <tr>
+                        <td>{{ row[0] }}</td>
+                        <td>{{ row[1] }}</td>
+                        <td>{{ row[2] }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        {% else %}
+            <div class="error-box">
+                <h3>⚠️ Нет результатов</h3>
+                <p>Пользователь с ID "{{ search }}" не найден</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>

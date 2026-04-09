@@ -2,26 +2,174 @@
 <html>
 <head>
     <title>Уровни - SQL Injection Lab</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style_levels.css') }}"
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h2 {
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-name {
+            color: white;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .back-link a {
+            color: white;
+        }
+
+        .levels-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .level-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .level-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .level-card h3 {
+            color: white;
+            font-size: 24px;
+            margin-bottom: 15px;
+        }
+
+        .level-card p {
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 10px;
+        }
+
+        .level-difficulty {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .easy { background: #4caf50; color: white; }
+        .medium { background: #ff9800; color: white; }
+        .hard { background: #f44336; color: white; }
+
+        .btn {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            padding: 10px 25px;
+            border-radius: 40px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: #ffed4a;
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>🎮 Уровни сложности</h1>
-    <a href="/">← На главную</a>
-    
+    <div class="navbar">
+        <div class="logo">
+            <h2>SQL Injection Lab</h2>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, {{ username }}</span>
+            <a href="/logout" class="logout-btn">Выйти</a>
+        </div>
+    </div>
+
+    <h1>Уровни сложности</h1>
+    <div class="back-link">
+        <a href="/">← На главную</a>
+    </div>
+
     <div class="levels-grid">
         <div class="level-card">
             <h3>Уровень 1</h3>
-            <p>Основы SQL-инъекций</p>
+            <span class="level-difficulty easy">Easy</span>
+            <p>Три типа SQL-инъекций: строка, число, дата</p>
+            <p style="font-size: 12px; color: #ffd700;">🎯 Цель: Обойти поиск и показать все товары</p>
             <a href="/level/1" class="btn">Начать</a>
         </div>
+        
         <div class="level-card">
             <h3>Уровень 2</h3>
+            <span class="level-difficulty medium">Medium</span>
             <p>Error-based инъекции</p>
+            <p style="font-size: 12px; color: #ffd700;">🎯 Цель: Извлечь данные через ошибки SQL</p>
             <a href="/level/2" class="btn">Начать</a>
         </div>
+        
         <div class="level-card">
             <h3>Уровень 3</h3>
+            <span class="level-difficulty hard">Hard</span>
             <p>Union-based инъекции</p>
+            <p style="font-size: 12px; color: #ffd700;">🎯 Цель: Извлечь секретные данные через UNION</p>
             <a href="/level/3" class="btn">Начать</a>
         </div>
     </div>

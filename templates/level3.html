@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Уровень 1 - SQL Injection Lab</title>
+    <title>Уровень 3 - Union-Based SQL Injection</title>
     <style>
         * {
             margin: 0;
@@ -43,15 +43,7 @@
             color: white;
         }
 
-        .logout-btn {
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 40px;
-            text-decoration: none;
-        }
-
-        .back-btn {
+        .logout-btn, .back-btn {
             background: rgba(255, 255, 255, 0.2);
             color: white;
             padding: 8px 20px;
@@ -71,11 +63,10 @@
             margin-bottom: 30px;
         }
 
-        .attacks-container {
+        .levels-container {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
             gap: 30px;
-            margin-top: 30px;
         }
 
         .attack-card {
@@ -84,28 +75,14 @@
             border-radius: 20px;
             padding: 25px;
             border: 1px solid rgba(255, 255, 255, 0.2);
-            transition: transform 0.3s;
-        }
-
-        .attack-card:hover {
-            transform: translateY(-5px);
         }
 
         .attack-card h2 {
             color: white;
             margin-bottom: 15px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .attack-card .description {
-            color: rgba(255, 255, 255, 0.8);
-            font-size: 14px;
-            margin-bottom: 15px;
-            text-align: left;
-        }
-
-        .attack-card .vulnerability {
+        .vulnerability {
             background: rgba(244, 67, 54, 0.3);
             padding: 10px;
             border-radius: 10px;
@@ -114,14 +91,24 @@
             color: #ffcccc;
         }
 
-        .attack-card .example {
+        .examples {
             background: rgba(0, 0, 0, 0.3);
-            padding: 10px;
+            padding: 15px;
             border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .examples h3 {
+            color: #ffd700;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .examples p {
+            color: #ccffcc;
             font-family: monospace;
             font-size: 12px;
-            margin-bottom: 20px;
-            color: #ffd700;
+            margin-bottom: 5px;
         }
 
         .input-group {
@@ -154,13 +141,22 @@
             transform: scale(1.02);
         }
 
+        .tip {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(33, 150, 243, 0.3);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+        }
+
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
                 gap: 15px;
             }
             
-            .attacks-container {
+            .levels-container {
                 grid-template-columns: 1fr;
             }
         }
@@ -178,73 +174,60 @@
         </div>
     </div>
 
-    <h1>Уровень 1: Три типа SQL-инъекций</h1>
+    <h1>Уровень 3: Union-Based SQL Injection</h1>
     <div class="description">
-        Попробуйте внедрить SQL-код в разные типы полей ввода
+        Используйте UNION для извлечения данных из других таблиц
     </div>
 
-    <div class="attacks-container">
-        <!-- Атака 1: Строковый тип -->
+    <div class="levels-container">
+        <!-- Базовый поиск -->
         <div class="attack-card">
-            <h2>📝 1. Строковая инъекция</h2>
-            <div class="description">
-                Поиск товаров по названию. Поле ввода уязвимо для SQL-инъекций.
-            </div>
+            <h2>🔍 Поиск постов по ID</h2>
             <div class="vulnerability">
-                🔴 Уязвимый код: WHERE name LIKE '%[INPUT]%'
+                🔴 Уязвимый код: SELECT id, title, content FROM posts WHERE id = [INPUT]
             </div>
-            <div class="example">
-                💡 Пример инъекции: ' OR '1'='1' -- 
-                <br>(Покажет все товары)
+            
+            <div class="examples">
+                <h3>💡 Примеры Union-based инъекций:</h3>
+                <p>1. 1 UNION SELECT 1,2,3 -- (определение количества колонок)</p>
+                <p>2. 1 UNION SELECT username, password, email FROM users_secret --</p>
+                <p>3. 1 UNION SELECT id, username, credit_card FROM users_secret --</p>
             </div>
-            <form action="/level/1/string" method="POST">
+
+            <form action="/level/3/search" method="POST">
                 <div class="input-group">
-                    <input type="text" name="search" placeholder="Введите название товара...">
+                    <input type="text" name="category" placeholder="Введите ID поста...">
                     <button type="submit">Поиск</button>
                 </div>
             </form>
         </div>
 
-        <!-- Атака 2: Числовой тип -->
+        <!-- Продвинутый UNION -->
         <div class="attack-card">
-            <h2>🔢 2. Числовая инъекция</h2>
-            <div class="description">
-                Поиск товаров дороже указанной цены. Уязвим для числовых инъекций.
-            </div>
+            <h2>🚀 Продвинутая UNION инъекция</h2>
             <div class="vulnerability">
-                🔴 Уязвимый код: WHERE price > [INPUT]
+                🔴 Цель: Извлечь данные из таблицы users_secret
             </div>
-            <div class="example">
-                💡 Пример инъекции: 100 OR 1=1
-                <br>(Покажет все товары)
+            
+            <div class="examples">
+                <h3>💡 Цели для извлечения:</h3>
+                <p>• username, password, email</p>
+                <p>• credit_card, secret_info</p>
+                <p>• Имена всех таблиц в базе данных</p>
             </div>
-            <form action="/level/1/number" method="POST">
-                <div class="input-group">
-                    <input type="text" name="price" placeholder="Введите минимальную цену...">
-                    <button type="submit">Поиск</button>
-                </div>
-            </form>
-        </div>
 
-        <!-- Атака 3: Дата -->
-        <div class="attack-card">
-            <h2>📅 3. Инъекция по дате</h2>
-            <div class="description">
-                Поиск товаров по дате выпуска. Уязвим для date-based инъекций.
-            </div>
-            <div class="vulnerability">
-                🔴 Уязвимый код: WHERE release_date = '[INPUT]'
-            </div>
-            <div class="example">
-                💡 Пример инъекции: 2024-01-01' OR '1'='1
-                <br>(Покажет все товары)
-            </div>
-            <form action="/level/1/date" method="POST">
+            <form action="/level/3/union" method="POST">
                 <div class="input-group">
-                    <input type="text" name="date" placeholder="Введите дату (ГГГГ-ММ-ДД)...">
-                    <button type="submit">Поиск</button>
+                    <input type="text" name="payload" placeholder="Введите UNION payload...">
+                    <button type="submit">Выполнить</button>
                 </div>
             </form>
+
+            <div class="tip">
+                <strong>📖 Теория:</strong> UNION инъекции позволяют объединить результаты 
+                из разных таблиц. Сначала определите количество колонок в исходном запросе, 
+                затем используйте UNION SELECT для извлечения данных из других таблиц.
+            </div>
         </div>
     </div>
 </body>
